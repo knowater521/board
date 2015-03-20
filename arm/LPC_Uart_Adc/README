@@ -1,0 +1,3 @@
+linker 选项中一定要勾上Use Memory Layout for Target Dialog！！！
+sct文件在目录下
+时钟15Mhz

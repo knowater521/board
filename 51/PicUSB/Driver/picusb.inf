@@ -1,0 +1,96 @@
+[Version]
+Signature="$WINDOWS NT$"
+Class=%ClassName%
+ClassGuid={4D36E911-E325-11CE-BFC1-08002BE10318}
+Provider=%MFGNAME%
+DriverVer=03/10/2005,1.0.0.0
+CatalogFile=picusb.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+PicUSB.ClassCopyFiles = 11
+
+;------------------------------------------------------------------------------
+;  Class installation sections
+;------------------------------------------------------------------------------
+
+[ClassInstall32]
+AddReg=PicUSB.ClassReg
+CopyFiles=PicUSB.ClassCopyFiles
+
+[PicUSB.ClassReg]
+HKR,,,0,%ClassName%
+HKR,,Class,,%ClassDesc%
+HKR,,Icon,,11
+HKR,,Installer32,,"picusbci.dll,PicUSBClassInstaller"
+
+
+[PicUSB.ClassCopyFiles]
+picusbci.dll
+
+;------------------------------------------------------------------------------
+;  Device  Install Section
+;------------------------------------------------------------------------------
+
+[Manufacturer]
+%MFGNAME%=Standard
+
+[Standard]
+%DESCRIPTION%=DriverInstall, USB\VID_04D8&PID_0011
+
+[SourceDisksNames]
+1 = %INSTDISK%,,,""
+
+[SourceDisksFiles]
+mchpusb.sys  = 1,,
+wdmstub.sys  = 1,,
+picusbci.dll = 1,,
+
+;------------------------------------------------------------------------------
+;  Windows 2000/XP Sections
+;------------------------------------------------------------------------------
+
+[DriverInstall.NT]
+CopyFiles=DriverCopyFiles
+
+[DriverCopyFiles]
+mchpusb.sys
+
+[DriverInstall.NT.Services]
+AddService = PicUSB, 2, DriverService
+
+[DriverService]
+DisplayName    = %SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START 
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\mchpusb.sys
+LoadOrderGroup = Extended Base
+
+;------------------------------------------------------------------------------
+;  Windows 98/Me Sections
+;------------------------------------------------------------------------------
+
+[DriverInstall]
+AddReg=DriverAddReg
+CopyFiles=DriverCopyFiles,StubCopyFiles
+DriverVer=09/26/2005,1.0.0.0
+
+[DriverAddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,"wdmstub.sys,mchpusb.sys"
+
+[StubCopyFiles]
+wdmstub.sys
+
+;------------------------------------------------------------------------------
+;  String Definitions
+;------------------------------------------------------------------------------
+
+[Strings]
+MFGNAME="J1M PicUSB"
+INSTDISK="PicUSB Device Driver Disc"
+DESCRIPTION="PicUSB" 
+SVCDESC="PicUSB Device Driver"
+ClassName="PIC 18Fxx5x USB Devices"
+ClassDesc="PicUSB Sample Device"
